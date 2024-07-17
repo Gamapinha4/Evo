@@ -6,7 +6,6 @@ import styled, { keyframes } from "styled-components";
 import Logo from "@/components/Logo";
 import { useEffect, useState } from "react";
 import { differenceInMilliseconds } from "date-fns";
-import { listCodes } from "@/components/list";
 
 const fadeIn = keyframes`
   0%{
@@ -204,49 +203,6 @@ export default function Home() {
 
   const [state, setState] = useState<'loading' | 'home' | 'painel' | ''>('')
 
-  const verificaCodigo = (codigoDesejado: string) => {
-    let codigoExiste = false;
-  
-    listCodes.forEach((item) => {
-      if (item.code === codigoDesejado) {
-        codigoExiste = true;
-        setInfo(item)
-      }
-    });
-  
-    return codigoExiste;
-  };
-
-  function handleConfirm() {
-
-    if (!verificaCodigo(inputValue)) {
-      setInputError(false)
-
-      setTimeout(() => {
-        setInputError(true)
-      }, 1000);
-
-      return;
-    }
-    setState('painel')
-    
-  }
-
-  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const sanitizedValue = value.replace(/\D/g, '');
-
-    let formattedValue = '';
-    for (let i = 0; i < sanitizedValue.length; i++) {
-      if (i === 3) {
-        formattedValue += '-';
-      }
-      formattedValue += sanitizedValue[i];
-    }
-  
-    setInputValue(formattedValue);
-  };
-
   useEffect(() => {
     setTimeout(() => {
       setState('loading')
@@ -306,12 +262,6 @@ export default function Home() {
         <Logo/>
         <Title>EVO</Title>
       </LogoContainer>
-
-      <Container>
-        <Text>Por favor inserir o codigo da reuniao abaixo:</Text>
-        <Input valid={inputError} placeholder="111-111" value={inputValue} onChange={onChangeHandler} maxLength={7}/>
-        <Button bgColor="black" color="white" hoverBg="white" hoverColor="black" onClick={() => handleConfirm()}>CONFIRMAR</Button>
-      </Container>
     </>
   );
 }
