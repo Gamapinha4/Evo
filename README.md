@@ -1,4 +1,4 @@
-# EVO - Meeting Room Scheduler
+# EVO - Meeting Room Scheduler (APLICAÇÃO DE EXEMPLO)
 
 ## Descrição
 
@@ -9,7 +9,6 @@ EVO é um aplicativo intuitivo e fácil de usar, projetado para ajudar a organiz
 - **Interface Simples**: Design minimalista e futurista para uma navegação intuitiva.
 - **Reserva Rápida**: Marque salas de reuniões em poucos cliques.
 - **Gerenciamento de Disponibilidade**: Veja a disponibilidade das salas em tempo real.
-- **Notificações**: Receba lembretes e confirmações de reservas.
 - **Suporte Multidispositivo**: Acesse o aplicativo de qualquer dispositivo, seja desktop, tablet ou smartphone.
 - **Histórico de Reservas**: Consulte o histórico de reuniões agendadas.
 
