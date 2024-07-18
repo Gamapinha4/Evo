@@ -1,13 +1,11 @@
-// pages/index.tsx
 'use client'
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { useQRCode } from 'next-qrcode';
 import Logo from '@/components/Logo';
 import ProgressBar from '@/components/ProgressBar';
 import { hatch } from 'ldrs';
 import { db, empresas } from '@/components/list';
-import NextMeetingProgress from '@/components/NextMeetingProgress'; // Importe o componente NextMeetingProgress
+import NextMeetingProgress from '@/components/NextMeetingProgress';
 
 export default function Page({ params }: { params: { empresa: string, id: string } }) {
     const { Canvas } = useQRCode();
@@ -16,7 +14,7 @@ export default function Page({ params }: { params: { empresa: string, id: string
     const [infos, setInfos] = useState<any[]>([]);
     const [timeUntilNextMeeting, setTimeUntilNextMeeting] = useState<number | null>(null);
     const [temporaryMessage, setTemporaryMessage] = useState<string | null>(null);
-    const [nextMeetingIndex, setNextMeetingIndex] = useState<number>(0); // State para controlar o índice da próxima reunião
+    const [nextMeetingIndex, setNextMeetingIndex] = useState<number>(0); 
 
     hatch.register();
 
@@ -25,14 +23,13 @@ export default function Page({ params }: { params: { empresa: string, id: string
             const empresaFound = empresas.find(item => item.code === params.empresa);
             if (empresaFound) {
                 setEmpresa(empresaFound.empresa);
-                
-                const filteredInfos = db.filter((dbItem: any) => 
-                    dbItem.empresa === empresaFound.empresa && 
+
+                const filteredInfos = db.filter((dbItem: any) =>
+                    dbItem.empresa === empresaFound.empresa &&
                     dbItem.sala === String(parseInt(params.id) <= 9 ? '0' + params.id : params.id)
                 );
                 setInfos(filteredInfos);
 
-                // Encontrar a próxima reunião
                 const now = new Date().getTime();
                 const upcomingMeetings = filteredInfos
                     .map((meeting: any) => ({
@@ -47,18 +44,15 @@ export default function Page({ params }: { params: { empresa: string, id: string
                         current.startTimestamp < next.startTimestamp ? current : next
                     );
 
-                    // Calcular tempo até a próxima reunião
                     const timeUntilNext = nextMeeting.startTimestamp - now;
                     setTimeUntilNextMeeting(timeUntilNext);
 
-                    // Definir mensagem temporária se necessário
-                    if (timeUntilNext < 300000) { // Mostrar mensagem se menos de 5 minutos
+                    if (timeUntilNext < 300000) {
                         setTemporaryMessage(`Próxima reunião em breve`);
                     } else {
                         setTemporaryMessage(null);
                     }
 
-                    // Atualizar o índice da próxima reunião
                     const nextIndex = filteredInfos.findIndex((item: any) => item === nextMeeting);
                     if (nextIndex !== -1) {
                         setNextMeetingIndex(nextIndex);
@@ -76,12 +70,11 @@ export default function Page({ params }: { params: { empresa: string, id: string
 
         fetchEmpresa();
 
-        const interval = setInterval(fetchEmpresa, 1000); // Verificar a cada 1 segundo
+        const interval = setInterval(fetchEmpresa, 1000);
 
-        return () => clearInterval(interval); // Limpar intervalo ao desmontar o componente
+        return () => clearInterval(interval);
     }, [params]);
 
-    // Função para converter tempo em timestamp
     const convertTimeToTimestamp = (time: any): number => {
         const [hours, minutes] = time.split(':').map(Number);
         const now = new Date();
@@ -94,35 +87,40 @@ export default function Page({ params }: { params: { empresa: string, id: string
         );
         return targetTime.getTime();
     };
-
-    // Verificar se é hora da próxima reunião e atualizar dados
     useEffect(() => {
         const checkNextMeetingTime = () => {
             if (infos.length > 0 && nextMeetingIndex >= 0 && nextMeetingIndex < infos.length) {
                 const nextMeeting = infos[nextMeetingIndex];
                 const now = new Date().getTime();
-                const meetingStartTime = convertTimeToTimestamp(nextMeeting.timeInicio);
+                const meetingEndTime = convertTimeToTimestamp(nextMeeting.timeFim);
 
-                if (now >= meetingStartTime) {
-                    // Atualizar dados para a próxima reunião
-                    setTimeUntilNextMeeting(null); // Resetar o timer
-                    setTemporaryMessage(null); // Limpar mensagem temporária
-
-                    // Encontrar o próximo índice de reunião
+                if (now >= meetingEndTime) {
                     const newIndex = nextMeetingIndex + 1;
+
                     if (newIndex < infos.length) {
+                        const nextMeeting = infos[newIndex];
+                        const now = new Date().getTime();
+                        const timeUntilNext = convertTimeToTimestamp(nextMeeting.timeInicio) - now;
+
                         setNextMeetingIndex(newIndex);
+                        setTimeUntilNextMeeting(timeUntilNext);
+                        
+                        if (timeUntilNext < 300000) {
+                            setTemporaryMessage(`Próxima reunião em breve`);
+                        } else {
+                            setTemporaryMessage(null);
+                        }
                     } else {
-                        // Nenhuma reunião futura disponível, redirecionar para outra página ou mostrar mensagem
-                        setInfos([]); // Limpar as informações para trocar de tela
+                        setInfos([]);
+                        setTemporaryMessage('Não há próximas reuniões agendadas');
                     }
                 }
             }
         };
 
-        const interval = setInterval(checkNextMeetingTime, 1000); // Verificar a cada 1 segundo
+        const interval = setInterval(checkNextMeetingTime, 1000);
 
-        return () => clearInterval(interval); // Limpar intervalo ao desmontar o componente
+        return () => clearInterval(interval);
     }, [infos, nextMeetingIndex]);
 
     if (loading) {
@@ -180,8 +178,6 @@ export default function Page({ params }: { params: { empresa: string, id: string
             </div>
         );
     }
-
-    // Se não há informações ou se todas as reuniões passaram, redirecione ou mostre uma mensagem
     return (
         <div style={{ display: "flex", flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '15%', flexDirection: 'row' }}>
             <Canvas
@@ -208,7 +204,6 @@ export default function Page({ params }: { params: { empresa: string, id: string
     );
 }
 
-// Função para formatar tempo em minutos e segundos
 const formatTime = (milliseconds: number): string => {
     const minutes = Math.floor(milliseconds / 60000);
     const seconds = ((milliseconds % 60000) / 1000).toFixed(0);

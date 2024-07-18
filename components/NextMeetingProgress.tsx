@@ -13,7 +13,7 @@ const convertTimeToTimestamp = (time: any): any => {
     return targetTime.getTime();
 };
 
-const getNextMeeting = (db: any): any => {
+export const getNextMeeting = (db: any): any => {
     const now = new Date().getTime();
     const upcomingMeetings = db
         .map((meeting: any) => ({
@@ -39,7 +39,7 @@ const getMeetingsCountAndAvailableTimes = (db: any, empresa: any, sala: any): an
             startTimestamp: convertTimeToTimestamp(meeting.timeInicio),
             endTimestamp: convertTimeToTimestamp(meeting.timeFim),
         }))
-        .filter((meeting: any) => meeting.endTimestamp > now); // Filtrar apenas reuniões que ainda não terminaram
+        .filter((meeting: any) => meeting.endTimestamp > now);
 
     const availableTimes: any = [];
     meetings.forEach((meeting: any, index: any) => {
