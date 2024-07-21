@@ -23,5 +23,5 @@ EVO é um aplicativo intuitivo e fácil de usar, projetado para ajudar a organiz
 - **Banco de Dados**: (Localhost | A funcionalidade do banco de dados não está totalmente implementada ainda)
 
 ## Imagens:
-(![349888952-2ee4e2f9-c8f2-4f64-bef7-6e7bf4bca43f (1)](https://github.com/user-attachments/assets/37d060d6-6fe6-4790-b814-0d24ecf43429)
-)
+![349888952-2ee4e2f9-c8f2-4f64-bef7-6e7bf4bca43f (1)](https://github.com/user-attachments/assets/37d060d6-6fe6-4790-b814-0d24ecf43429)
+
