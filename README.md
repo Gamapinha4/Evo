@@ -1,7 +1,3 @@
-# EVO - Meeting Room Scheduler
-
-## Descrição
-
 EVO é um aplicativo intuitivo e fácil de usar, projetado para ajudar a organizar e marcar salas de reuniões de maneira eficiente. Com uma interface minimalista e futurista, EVO facilita a gestão das reservas de salas, garantindo que suas reuniões sejam agendadas sem complicações.
 
 **Nota**: Este é um exemplo criado para treinar o desenvolvimento em Next.js. A funcionalidade do banco de dados não está totalmente implementada neste momento.
